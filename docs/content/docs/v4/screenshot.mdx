@@ -1,5 +1,5 @@
 ---
-title: Screenshot
+title: Capture Screenshots
 description: Capture and integrate screenshots from your media directly into your notes.
 icon: Frame
 ---
@@ -54,12 +54,12 @@ When you save a screenshot, two things happen:
 By default, the inserted text looks like this:
 
 ```md
-- ![[mx-img-nttvxbfgryxc8va2fi327dk8-pt19_80s.jpg|Big Buck Bunny - 00:19|50]] [[big-buck-bunny-1080p-30sec.mp4#t=00:19.80|00:19]]
+- ![[screenshot-xyz.jpg|My Video - 00:01:02|50]] [[My Video.mp4#t=1m2s]]
 ```
 
 This is a combination of two things:
-- `![[screenshot.jpg|TITLE|WIDTH]]`: An embedded image of the screenshot. The text inside `|...|` is the embed's display text, which by default shows the media title and timestamp, and sets the image width.
-- `[[video.mp4#t=TIMESTAMP|LABEL]]`: A timestamp link that jumps you to the exact moment in the video.
+- `![[screenshot.jpg|...]]`: An embedded image of the screenshot. The text inside `|...|` is the embed's display text (or alt text), which by default shows the media title and timestamp, and sets the image width.
+- `[[video.mp4#t=...]]`: A timestamp link that jumps you to the exact moment in the video.
 
 ## Customization
 
@@ -75,15 +75,7 @@ By default, screenshots are saved in your vault root. You can specify a custom f
 
 ### Link Templates
 
-The text inserted into your note is generated from templates, which you can customize under `Settings > Media Extended > Note > Template`.
+The text inserted when you take a screenshot is generated from templates. You can customize these in `Settings > Media Extended > Note Taking` to fit your note-taking style perfectly.
 
-- **Screenshot Template**: Defines the structure of the entire line. Default is `\n- !{{SCREENSHOT}} {{TIMESTAMP}}`, which will insert a new line of list item with an screenshot thumbnail and a timestamp link.
-  - `{{SCREENSHOT}}`: The placeholder for the image embed.
-  - `{{TIMESTAMP}}`: The placeholder for the timestamp link.
-- **Screenshot Embed Template**: Defines the display text for the embedded image. Default is `{{TITLE}}{{DURATION}}|50`.
-  - `{{TITLE}}`: The title of the media.
-  - `{{DURATION}}`: The formatted timestamp.
-  - `|50`: An example of setting the image width.
-
-You can change these templates to fit your note-taking style perfectly.
+For a detailed guide and more examples, see [Template Customization](/docs/v4/template).
 
