@@ -1,0 +1,113 @@
+---
+title: Links and Embeds
+description: Include media links and embeds in your notes
+icon: Link
+---
+
+Linking to media files in your notes is a powerful way to connect your thoughts to specific moments in audio and video. With Media Extended, you can create links that not only open a media file but also jump to a precise timestamp, loop a segment, or even embed a clip directly into your notes.
+
+This guide will show you how to quickly create media links and then how to customize them for more advanced playback control.
+
+## Get Timestamp from Player
+
+The easiest way to link to a specific moment is to add a timestamp directly from the player.
+
+When you have a media file open, click the **Timestamp ⭐** button in the player controls. A link to that exact moment will be inserted into your active note.
+
+![Adding a timestamp from the player](./first-note.png)
+
+This allows you to take notes and create a "table of contents" for your media without ever having to manually copy-paste timestamps.
+
+For even faster access, use the `Take timestamp` command from the command palette. We recommend assigning a hotkey (e.g., `Cmd+Shift+T`) to this command.
+
+## Understanding Media Links
+
+Clicking the timestamp button creates a link that looks like this:
+
+`[[My Video.mp4#t=1m2s]]`
+
+This is a standard wiki-link to your media file, with a "media fragment" (`#t=...`) added at the end. This fragment tells Media Extended which point in time to jump to.
+
+The time format is flexible. Here are a few examples:
+
+| Link                | Action                                   |
+| ------------------- | ---------------------------------------- |
+| `[[...#t=1m2s]]`    | Jumps to 1 minute and 2 seconds.         |
+| `[[...#t=,50]]`     | Plays from the beginning to 50 seconds.  |
+| `[[...#t=10,20]]`   | Plays the segment from 10s to 20s.       |
+
+This works for external media, too: `[External Video](https://example.com/vid.webm#t=10,20)`.
+
+## Embed Media and Create Clips
+
+To embed a media file directly in your notes, just add a `!` before the link.
+
+`![[My Video.mp4#t=1m2s]]`
+
+This will embed the video and start it at the 1 minute, 2 second mark. This works for both local files and videos from platforms like YouTube or Vimeo.
+
+### Creating Clips
+
+By providing both a start and end time, you can create a clip that only plays a specific segment of the media.
+
+`![[My Video.mp4#t=1m10s,1m20s]]`
+
+This creates a 10-second clip from "My Video.mp4".
+
+<Callout type="info">
+A user interface to visually select and create these clips directly from the player will be available soon.
+</Callout>
+
+### Resizing Embeds
+
+You can control the width of an embedded video by adding `|` followed by a number.
+
+`![[My Video.mp4|300]]`
+
+## Add Playback Controls
+
+You can add more playback behavior by adding properties to the link, separated by `&`.
+
+For example, to make a clip loop and play automatically, you can write:
+
+`![[My Video.mp4#t=10,20&loop&play]]`
+
+This will embed "My Video.mp4", play the 10-20s segment, loop it, and start it automatically.
+
+---
+
+## Advanced Reference
+
+For more advanced control, here is a full list of available properties and settings.
+
+### All Link Properties
+
+You can chain these properties together using `&`. For example, `[[My Video.mp4#t=10,20&loop&mute]]` will play the 10-20s segment in a loop without sound.
+
+| Property     | Description                                                  | Example                                     |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------- |
+| `t=`         | Sets the start and end time.                                 | `#t=1m2s,1m5s`                               |
+| `loop`       | Loops the media (or the `t=` segment if specified).          | `#t=5,10&loop`                              |
+| `mute`       | Starts the media in a muted state.                           | `#mute`                                     |
+| `play`       | Starts playing the media automatically.                      | `#play`                                     |
+| `vol=`       | Sets the volume from 0 to 100.                               | `#vol=80`                                   |
+| `controls`   | Forces the player controls to be visible.                    | `#controls`                                 |
+| `noctrl`     | Forces the player controls to be hidden.                     | `#noctrl`                                   |
+| `as=`        | Forces the media to be treated as `video` or `audio`.        | `.../media.file#as=video`                   |
+
+### Manual Time Format
+
+If you are writing links by hand, the `t=` property accepts several formats:
+- Seconds: `#t=121.5`
+- Minutes and seconds: `#t=2m1s`
+- Hours, minutes, and seconds: `#t=1h2m3s`
+
+<Callout type="info">
+  The format is based on the [W3C Media Fragments URI 1.0 (basic) specification](https://www.w3.org/TR/media-frags/#naming-time).
+</Callout>
+
+### Link and Template Settings
+
+In `Settings > Media Extended`, you can customize:
+- **Note Taking > Template**: Change the format of inserted timestamps and screenshots. For example, changing `- {{TIMESTAMP}}` to `- [ ] {{TIMESTAMP}}` will create a checklist item. See [Template Customization](/docs/v4/template) for more.
+- **Link behavior**: Define the default click and `Alt/Option`-click actions for media links (e.g., open in a new tab, split pane, or new window). This gives you full control over your workspace layout.
