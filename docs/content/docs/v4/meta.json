@@ -6,6 +6,7 @@
   "pages": [
     "---Introduction---",
     "index",
+    "whats-new",
     "breaking-changes",
     "---Features---",
     "load-media",
