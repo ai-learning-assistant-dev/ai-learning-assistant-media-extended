@@ -4,8 +4,6 @@ description: Customize how timestamps and screenshots are inserted into your not
 icon: Blocks
 ---
 
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
 Media Extended uses templates to control the format of timestamps and screenshots when you insert them into your notes. You can customize these templates to match your personal workflow.
 
 All template settings are located in `Settings > Media Extended > Note Taking`.
@@ -34,9 +32,9 @@ Two templates work together to format screenshots. This gives you fine-grained c
 
 ### How They Work Together
 
-<Steps>
-<Step>
-#### 1. Screenshot Embed Template
+<div className="fd-steps [&_h4]:fd-step">
+
+#### Screenshot Embed Template
 
 This template defines the content of the `{{SCREENSHOT}}` placeholder, specifically the alt-text (or display text) for the image embed, and its size.
 
@@ -48,9 +46,8 @@ This template defines the content of the `{{SCREENSHOT}}` placeholder, specifica
 -   **Syntax:** The part after `|` in the embed, like `|50`, controls the display width of the image.
 
 When you take a screenshot of `My Video.mp4` at `1m2s`, this template generates the image embed part: `![[screenshot-xyz.jpg|My Video - 00:01:02|50]]`.
-</Step>
-<Step>
-#### 2. Screenshot Template
+
+#### Screenshot Template
 
 This template defines the overall structure of the text inserted when you take a screenshot. It uses the output from the embed template.
 
@@ -62,8 +59,8 @@ This template defines the overall structure of the text inserted when you take a
 
 This template takes the result from the previous step and adds the timestamp link, producing the final output:
 `![[screenshot-xyz.jpg|My Video - 00:01:02|50]] [[My Video.mp4#t=1m2s]]`
-</Step>
-</Steps>
+
+</div>
 
 <Callout title="Controlling Line Breaks and Spacing">
   To add line breaks, press `Enter` in the template text area. Your newlines will be preserved in the output.

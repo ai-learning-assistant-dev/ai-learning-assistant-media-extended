@@ -4,16 +4,14 @@ description: Capture and integrate screenshots from your media directly into you
 icon: Frame
 ---
 
-import { Step, Steps } from 'fumadocs-ui/components/steps';
-
 Media Extended allows you to capture screenshots from videos and seamlessly embed them into your notes. This isn't just a simple screen grab; it's a powerful way to link visual information directly to your thoughts, complete with timestamps.
 
 ## Capturing a Screenshot
 
 You can capture a screenshot in a couple of ways, depending on your workflow.
 
-<Steps>
-<Step>
+<div className="fd-steps [&_h3]:fd-step">
+
 ### From the Player
 
 The quickest way to grab a screenshot is from the player's control bar. Just click the camera icon.
@@ -21,8 +19,7 @@ The quickest way to grab a screenshot is from the player's control bar. Just cli
 ![Capture Screenshot from Player Controls](./screenshot-action.png)
 
 This will save the current frame to your vault and insert a link into your active note.
-</Step>
-<Step>
+
 ### With Commands
 
 For a more keyboard-driven approach, you can use commands from the command palette:
@@ -35,8 +32,8 @@ For a more keyboard-driven approach, you can use commands from the command palet
 | `Clip and Copy Screenshot` | Lets you crop the frame before copying it to the clipboard. |
 
 Assign hotkeys to these commands for even faster access.
-</Step>
-</Steps>
+
+</div>
 
 ## Clipping Images
 
