@@ -5,47 +5,46 @@ Integrate, manage, and play media files directly in Obsidian. 🖇️🗂️⏯�
 > [!WARNING]
 > **License Change:** Media Extended v4 is now available for testing via BRAT. 
 > Future releases of v4 will be **closed source**.
-> The original codebase up to version 3 remains open source under the MIT license and can be found in the [`v3` branch](https://github.com/PKM-er/media-extended/tree/v3).
+> The original codebase up to version 3 remains open source under the MIT license and can be found in the [`v3` branch](https://github.com/aidenlx/media-extended/tree/v3).
 >
 > Further information about Media Extended v4 and its beta testing will be available [here](https://mx.pkmer.net/docs/v4).
 
-![Media Extended plugin with player and media note](./assets/first-note.jpg)
+![Media Extended plugin with player and media note](./docs/content/docs/v4/first-note.png)
 
 This plugin is designed to enrich your note-taking experience in obsidian.md by seamlessly integrating multimedia content into your notes. Whether you're a student, researcher, or content creator, this plugin makes it easier to incorporate, control, and reference audio and video materials directly within your digital notebook.
 
 ## Getting Started 🚀
 
-Go to [media-extended documentation](https://mx.pkmer.net/docs/v3#getting-started) for more information.
+Go to [Media Extended v4 Documentation](https://mx.pkmer.net/docs/v4) for more information.
 
-> [!TIP]
-> TL;DR:
-> 1. Click to install: [![install - obsidian](https://img.shields.io/badge/media_extended-v3-6c31e3?logo=obsidian)](https://obsidian.md/plugins?id=media-extended)
-> 2. open the following link in browser to see the plugin in action.
-> ```
-> obsidian://mx-open/https://www.youtube.com/watch?v=jNQXAC9IVRw
-> ```
+With just one click, you can open a video directly in Obsidian.
 
-For common question, please refer to the [FAQ](https://mx.pkmer.net/docs/v3/faq), and before open an issue, please check [Known issues](https://mx.pkmer.net/docs/v3/faq/known-issue) first.
+Click this link to try it now: [Steve Jobs' 2005 Stanford Commencement Address](obsidian://mx-open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUF8uR6Z6KLc)
+
+<!--
+For common questions, please refer to the [FAQ](https://mx.pkmer.net/docs/v4/faq), and before opening an issue, please check for [known issues](https://github.com/aidenlx/media-extended/issues) first.
+-->
 
 ## Features 🌟
 
-- **Seamless Integration with Obsidian** 🤝: Works perfectly with Obsidian's live preview and multi-window support, ensuring a smooth workflow.
-- **Embed Multimedia Files** 📁: Easily embed both local or hosted video and audio files directly into your notes, bringing your content to life.
-- **Playback Control** ⏯️: Utilize commands and keyboard shortcuts for efficient playback control, including play, pause, skip, and timestamping for quick references.
-- **Support for Multiple Video Platforms** 🌐: Enjoy support for popular platforms like YouTube, Vimeo, Coursera, Bilibili, and more. If it can be played in a web browser, it can be embedded in your notes.
-- **Local Subtitle Support** 📑: Enhance your media with local subtitle files in SRT, VTT, and ASS formats, making it easier to follow along or understand content in another language.
-- **Media Fragments** 🎞️: Create media fragments that play only within a specified range, perfect for focusing on specific parts of a lecture or presentation.
-- **Playlist Support** 📋: Organize your media files into playlists for continuous playback.
+- **Redesigned Player**: A new, adaptive design that adjusts to different pane sizes for a cleaner and more usable interface.
+- **Screenshot Clipping**: Capture a specific region of the video frame instead of the entire view.
+- **Interactive Transcript View**: Load subtitle files (`.srt`, `.vtt`, `.ass`) and see text highlighted as the media plays. Click any line to seek the media to that timestamp.
+- **Load Media**: Support for local files, remote URLs, and media-hosting services like YouTube and Vimeo via iframe.
+- **Playback Control**: Efficiently control playback with commands and keyboard shortcuts while taking notes.
+- **Capture Screenshots**: Capture screenshots with timestamp links to your notes.
+- **Customizable Templates**: Tailor the format of timestamps and screenshots to your needs.
+- **Recording**: Take notes while recording audio.
+- **Improved Performance and Stability**: The plugin has been rewritten for better performance and a more reliable foundation for future development.
 
-## Coming Next 🔮
+## Coming Soon 🔮
 
-- [ ] **Mobile support**📱
-- [ ] **Metadata and Subtitle Extraction** 📊: Pull metadata and subtitles directly from YouTube and Bilibili.
-
-- [ ] **Canvas Support** 🎨: Get creative with how you integrate and display media within your notes.
-- [ ] (Paid Features) **AI Summary for Transcript** 🤖: Get concise summaries of your media's content.
-- [ ] (Paid Features) **Table/Text OCR for Screenshots** 📷: Extract text from images for easy reference and integration.
-- [ ] (Paid Features) **Transcript Generation from Video** 📝: Automatically generate text transcripts from your video content.
+- **Media Library**: A central interface for managing media files and playlists.
+- **Browser Connector**: A browser extension to control media on websites directly from Obsidian.
+- **AI-Powered Chapters & Summaries**: Automatic chapter generation for videos with summaries, integrated into the player.
+- **Transcript Generation**: Automatic speech-to-text for audio and video files.
+- **Screenshot OCR**: Extract text from screenshots using optical character recognition.
+- **Playlist Support**: Organize your media files into playlists for continuous playback.
 
 ## Special Thanks
 
