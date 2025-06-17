@@ -15,10 +15,12 @@
 > **License Change:** Media Extended v4 is now available for testing via BRAT.
 > Future releases of v4 will be **closed source**.
 > The original codebase up to version 3 remains open source under the MIT license and can be found in the [`v3` branch](https://github.com/aidenlx/media-extended/tree/v3).
+> 
+> To join the beta testing, please refer to the [**Documentation**](https://mx.pkmer.net/docs/v4#v3-user).
 
 ![Media Extended plugin with player and media note](./docs/content/docs/v4/first-note.png)
 
-## ⭐ Overview
+## Overview
 
 Media Extended is a plugin that integrates media playback and management into Obsidian. Whether you're a student, researcher, or content creator, this plugin makes it easier to incorporate, control, and reference audio and video materials directly within your digital notebook, preserving Obsidian's philosophy of plain-text, future-proof note-taking.
 
@@ -35,17 +37,23 @@ Media Extended is a plugin that integrates media playback and management into Ob
 | **Customizable Templates** | Tailor the format of inserted timestamps and screenshot links to fit your personal note-taking workflow. |
 | **Powerful Linking** | Create media links and embeds with fragments for start/end times (`#t=...`), looping, and auto-play for precise control. |
 
-## Quick Start 🚀
+## 🚀 Quick Start
 
-**Try it now:** Click this link to open a video directly in Obsidian: [Steve Jobs' 2005 Stanford Commencement Address](obsidian://mx-open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUF8uR6Z6KLc)
+**Try it now:** With Media Extended installed, copy the URL below and paste it into your browser's address bar to open Steve Jobs' 
+2005 Stanford 
+Commencement Address directly in Obsidian.
+
+```txt
+obsidian://mx-open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUF8uR6Z6KLc
+```
 
 For detailed guides, please refer to the [**Documentation**](https://mx.pkmer.net/docs/v4).
 
-## Support 🆘
+## 🆘 Support
 
 - **Issues & Bug Reports:** [GitHub Issues](https://github.com/aidenlx/media-extended/issues)
 - **Questions & Discussions:** Check existing [issues](https://github.com/aidenlx/media-extended/issues) or create a new one
 
-## Special Thanks
+## 🙏 Special Thanks
 
 A special thanks to [bfcs](https://github.com/bfcs) for their valuable contributions. They have helped fix issues during a long period of inactivity and made attempts to implement YouTube transcript functionality!
