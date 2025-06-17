@@ -26,13 +26,9 @@ import {
   BlocksIcon
 } from 'lucide-react';
 
-## Introduction
+Media Extended allows you to integrate, manage, and play media files directly in Obsidian.
 
-Welcome to the docs for Media Extended v4 beta!
-
-Integrate, manage, and play media files directly in Obsidian. 🖇️🗂️⏯️
-
-### For User from v3 [#v3-user]
+## For User from v3 [#v3-user]
 
 <Callout type="warn" title="License Change">
 Future releases of v4 will be **closed source**.
@@ -42,6 +38,18 @@ The original codebase remains open source under the MIT license and can be found
 If you're coming from earlier versions or planning to join the beta testing, there are some important changes you should be aware of. 
 We recommend starting with the [breaking changes](/docs/v4/breaking-changes) to understand what's different in v4, 
 then check out the [new features](/docs/v4/whats-new) to see what's new.
+
+## Getting Started
+
+Once installed, you can open media in Obsidian with a single click. For example, a link to a YouTube video will open directly in the app:
+
+![first player with youtube video](./first-player.png)
+
+While playing, you can click the **Timestamp&nbsp;⭐&nbsp;** button to add a timestamped link to the current moment in your notes.
+
+![first media note](./first-note.png)
+
+Ready to try it yourself? Continue to installation guide: 
 
 ## Installation [#install]
 
@@ -173,19 +181,11 @@ Make sure three files are in the plugin folder: `main.js`, `manifest.json` and `
   </Tab>
 </Tabs>
 
-## Getting Started [#getting-started]
+## Special Thanks
 
-With just one click, you can open video directly in Obsidian.
+A special thanks to [bfcs](https://github.com/bfcs) for their valuable contributions. They have helped fix issues during a long period of inactivity and made attempts to implement YouTube transcript functionality!
 
-Click this link to try it now: [Steve Jobs' 2005 Stanford Commencement Address](obsidian://mx-open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUF8uR6Z6KLc)
-
-![first player with youtube video](./first-player.png)
-
-See that **Timestamp&nbsp;⭐&nbsp;** button? When you're ready to take notes, one click adds a timestamped link back to this exact moment in the video. It's that easy!
-
-![first media note](./first-note.png)
-
-You're all set! To continue, you can check out the following guides:
+## Explore Features
 
 <Cards>
   <Card icon={<FolderOpenIcon />} href="/docs/v4/load-media" title="Load Media">
@@ -222,7 +222,3 @@ You're all set! To continue, you can check out the following guides:
     Frequently Asked Questions
   </Card>
 </Cards>
-
-## Special Thanks
-
-A special thanks to [bfcs](https://github.com/bfcs) for their valuable contributions. They have helped fix issues during a long period of inactivity and made attempts to implement YouTube transcript functionality!
