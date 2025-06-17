@@ -22,6 +22,19 @@
 
 Media Extended is a plugin that integrates media playback and management into Obsidian. Whether you're a student, researcher, or content creator, this plugin makes it easier to incorporate, control, and reference audio and video materials directly within your digital notebook, preserving Obsidian's philosophy of plain-text, future-proof note-taking.
 
+## ⭐ Key Features
+
+| Feature | Description |
+| --- | --- |
+| **Broad Media Support** | Open and play local media files, remote URLs, and videos from services like YouTube and Vimeo directly in Obsidian. |
+| **Advanced Playback Control** | Control playback with global hotkeys without leaving your notes. Pin a player to avoid tab clutter. |
+| **Timestamped Notes** | Insert links to specific moments in your media with a single click or command. Clicking the timestamp jumps to the exact moment. |
+| **Screenshot Capture** | Capture screenshots from videos, with options to crop, and embed them in your notes with a timestamp link back to the source. |
+| **Interactive Transcripts** | Link transcripts (`.srt`, `.vtt`) to your media. Click to navigate, search the full text, and copy timestamped quotes. |
+| **Live Recording Timestamps** | While using Obsidian's audio recorder, drop timestamp markers into your notes that automatically become clickable links when the recording is saved. |
+| **Customizable Templates** | Tailor the format of inserted timestamps and screenshot links to fit your personal note-taking workflow. |
+| **Powerful Linking** | Create media links and embeds with fragments for start/end times (`#t=...`), looping, and auto-play for precise control. |
+
 ## Quick Start 🚀
 
 **Try it now:** Click this link to open a video directly in Obsidian: [Steve Jobs' 2005 Stanford Commencement Address](obsidian://mx-open?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DUF8uR6Z6KLc)
