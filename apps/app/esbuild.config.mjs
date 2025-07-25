@@ -7,6 +7,7 @@ import { resolve, basename } from "path";
 import semverPrerelease from "semver/functions/prerelease.js";
 import NODE_BULTIIN from "builtin-modules";
 import { readFile } from "fs/promises";
+import { pathToFileURL } from 'url';
 
 function isPreRelease() {
   const myPackage = JSON.parse(readFileSync("./package.json", "utf-8"));
@@ -70,7 +71,6 @@ const opts = {
     ...CM_BULTIIN,
     ...NODE_BULTIIN,
   ],
-  mainFields: ["browser", "module", "main"],
   sourcemap: isProd ? false : "inline",
   loader: {
     ".svg": "text",
@@ -82,7 +82,7 @@ const opts = {
   tsconfig: "tsconfig.json",
   plugins: [
     stylePlugin({
-      postcssConfigFile: resolve("./postcss.config.mjs"),
+      postcssConfigFile: pathToFileURL(resolve('postcss.config.mjs')).href,
     }),
     obPlugin({ beta: isPreRelease() }),
     inlineCodePlugin(
