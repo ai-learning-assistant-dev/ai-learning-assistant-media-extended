@@ -1,89 +1,94 @@
-import { requestUrl } from "obsidian";
-import {
-  generateNonce,
-  getYoutubeHeader,
-  getYoutubeToken,
-} from "../session/youtube";
+import { requestUrl, request } from "obsidian";
 
-export interface TranscriptConfig {
-  lang?: string;
-  country?: string;
-}
+import { parseTranscript, parseVideoPageWithFallbacks } from "./api-parser";
+import { YoutubeTranscriptError } from "./types";
+import type { TranscriptConfig, TranscriptResponse } from "./types";
 
-export interface TranscriptResponse {
-  title: string;
-  lines: TranscriptLine[];
-}
+export class YoutubeTranscript {
+  public static async getTranscript(
+    url: string,
+    config?: TranscriptConfig,
+  ): Promise<TranscriptResponse> {
+    try {
+      const videoPageBody = await request(url);
+      const videoData = parseVideoPageWithFallbacks(videoPageBody, config);
 
-export interface TranscriptLine {
-  text: string;
-  duration: number;
-  offset: number;
-}
+      console.log(
+        `🚀 DEBUG: Starting transcript fetch with ${videoData.transcriptRequests.length} different parameter combinations`,
+      );
 
-export async function getYoutubeTranscript(
-  url: string,
-  { country = "US", lang = "en" }: TranscriptConfig = {},
-) {
-  const token = await getYoutubeToken(url);
-  const headers = getYoutubeHeader();
-  const body = {
-    context: {
-      client: {
-        hl: lang,
-        gl: country,
-        visitorData: token.visitorData,
-        userAgent: headers["User-Agent"],
-        clientName: "WEB",
-        clientVersion: "2.20200925.01.00",
-        osName: "Macintosh",
-        osVersion: "10_15_4",
-        browserName: "Chrome",
-        browserVersion: "85.0f.4183.83",
-        screenWidthPoints: 1440,
-        screenHeightPoints: 770,
-        screenPixelDensity: 2,
-        utcOffsetMinutes: 120,
-        userInterfaceTheme: "USER_INTERFACE_THEME_LIGHT",
-        connectionType: "CONN_CELLULAR_3G",
-      },
-      request: {
-        sessionId: token.sessionId,
-        internalExperimentFlags: [],
-        consistencyTokenJars: [],
-      },
-      user: {},
-      clientScreenNonce: generateNonce(),
-      clickTracking: {
-        clickTrackingParams: token.clickTrackingParams,
-      },
-    },
-    params: token.serializedShareEntity,
-  };
-  const resp = await requestUrl({
-    headers,
-    url: `https://www.youtube.com/youtubei/v1/get_transcript?key=${token.apiKey}`,
-    method: "POST",
-    body: JSON.stringify(body),
-  });
-  const respPayload = resp.json;
-  if (!respPayload.responseContext) {
-    throw new Error("Failed to get transcript");
+      // Try each parameter combination until one succeeds
+      for (let i = 0; i < videoData.transcriptRequests.length; i++) {
+        const transcriptRequest = videoData.transcriptRequests[i];
+
+        // Extract and show params info
+        let paramsInfo = "UNKNOWN";
+        let paramsSource = "UNKNOWN";
+        try {
+          const requestBodyObj: any = JSON.parse(transcriptRequest.body);
+          const currentParams = requestBodyObj.params;
+          if (i === 0 && videoData.title) {
+            // First attempt - check if this might be page params
+            paramsSource =
+              currentParams && currentParams.length > 50 ? "PAGE" : "GENERATED";
+          } else {
+            paramsSource = "GENERATED";
+          }
+          paramsInfo = `${currentParams.substring(0, 30)}... (${
+            currentParams.length
+          } chars)`;
+        } catch (parseError) {
+          paramsInfo = "PARSE_ERROR";
+        }
+
+        try {
+          console.log(
+            `🎯 Attempt ${i + 1}/${
+              videoData.transcriptRequests.length
+            }: Trying ${paramsSource} params: ${paramsInfo}`,
+          );
+
+          const response = await requestUrl({
+            url: transcriptRequest.url,
+            method: "POST",
+            headers: transcriptRequest.headers,
+            body: transcriptRequest.body,
+          });
+
+          const lines = parseTranscript(response.text);
+
+          // If we got valid transcript lines, return success
+          if (lines && lines.length > 0) {
+            console.log(
+              `✅ SUCCESS on attempt ${i + 1}: Found ${
+                lines.length
+              } transcript lines using ${paramsSource} params!`,
+            );
+            return {
+              title: videoData.title,
+              lines,
+            };
+          } else {
+            console.log(
+              `❌ Attempt ${
+                i + 1
+              } failed: No transcript lines returned (empty response)`,
+            );
+          }
+        } catch (requestError: any) {
+          console.log(`❌ Attempt ${i + 1} failed: ${requestError.message}`);
+          // Continue to next attempt unless this was the last one
+          if (i === videoData.transcriptRequests.length - 1) {
+            throw requestError;
+          }
+        }
+      }
+
+      throw new YoutubeTranscriptError(
+        "All parameter combinations failed to fetch transcript",
+      );
+    } catch (err: any) {
+      throw new YoutubeTranscriptError(err);
+    }
   }
-  if (!respPayload.actions) {
-    throw new Error("Transcript is disabled on this video");
-  }
-  const cueGroups = respPayload.actions[0].updateEngagementPanelAction.content
-    .transcriptRenderer.body.transcriptBodyRenderer.cueGroups as any[];
-
-  return {
-    lines: cueGroups.map((c: any) => {
-      const cue = c.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer;
-      return {
-        text: cue.simpleText as string,
-        duration: Number.parseInt(cue.durationMs, 10),
-        offset: Number.parseInt(cue.startOffsetMs, 10),
-      };
-    }),
-  };
 }

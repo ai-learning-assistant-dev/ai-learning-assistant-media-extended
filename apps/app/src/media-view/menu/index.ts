@@ -138,6 +138,16 @@ export default function registerMediaMenu(this: MxPlugin) {
               );
             }),
         );
+        // 添加下载按钮
+        menu.addItem((item) =>
+          item
+            .setTitle("Download")
+            .setIcon("download")
+            .setSection("action")
+            .onClick(async () => {
+              console.log("");
+            }),
+        );
         urlMenu(menu, ctx);
       }
 
