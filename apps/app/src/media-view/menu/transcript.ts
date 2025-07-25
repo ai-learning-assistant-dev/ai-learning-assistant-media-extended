@@ -10,11 +10,12 @@ import { normalizeFilename } from "@/lib/norm";
 import { WebiviewMediaProvider } from "@/lib/remote-player/provider";
 import { uniq } from "@/lib/uniq";
 import { mediaTitle } from "@/media-note/title";
-import { stringifyTrack } from "@/transcript/stringify";
+import type { TranscriptResponse } from "@/web/transcript/types";
+import { YoutubeTranscript } from "web/transcript/youtube";
 import type { PlayerContext } from ".";
 
 export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
-  if (ctx.tracks.local.length === 0 && ctx.tracks.remote.length === 0) return;
+  // if (ctx.tracks.local.length === 0 && ctx.tracks.remote.length === 0) return;
 
   const tracks = [
     ...ctx.tracks.local.map((t) => ({ ...t, _type: "local" as const })),
@@ -38,12 +39,20 @@ export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
           if (t._type === "remote") {
             const file = await saveTranscript(t, ctx);
             if (file) {
-              ctx.plugin.app.workspace.openLinkText(file.path, "", "split");
+              await ctx.plugin.app.workspace.openLinkText(
+                file.path,
+                "",
+                "split",
+              );
             }
           } else if (t._type === "local") {
             if (t.src instanceof TFile) {
               if (ctx.plugin.app.vault.getFileByPath(t.src.path)) {
-                ctx.plugin.app.workspace.openLinkText(t.src.path, "", "split");
+                await ctx.plugin.app.workspace.openLinkText(
+                  t.src.path,
+                  "",
+                  "split",
+                );
               }
             } else {
               new Notice("Remote track not yet supported");
@@ -73,13 +82,39 @@ async function saveTranscript(
       new Notice(`Failed to save transcript: track ${id} not found`);
       return null;
     }
-    const content = stringifyTrack(track, {
-      Source: source.jsonState.source,
-      Title: mediaTitle(source, player),
-      Language: language,
-      Label: label,
-    });
+    // If the track is a youtube video, we get youtube transcript
+    // If the track is a bilibili video, we get bilibili transcript
+    const transcript = await YoutubeTranscript.getTranscript(
+      source.jsonState.source,
+      {
+        country: "US",
+        lang: language,
+      },
+    );
 
+    console.log(transcript.lines);
+    const vttContent =
+      "WEBVTT\n\n" +
+      transcript.lines
+        .filter((line) => line.text && line.text.trim() !== "")
+        .map((line, idx) => {
+          const formatTime = (s: number) => {
+            const h = String(Math.floor(s / 3600000)).padStart(2, "0");
+            const m = String(Math.floor((s % 3600000) / 60000)).padStart(
+              2,
+              "0",
+            );
+            const sec = String(Math.floor((s % 60000) / 1000)).padStart(2, "0");
+            const ms = String(Math.floor(s % 1000)).padStart(3, "0");
+            return `${h}:${m}:${sec}.${ms}`;
+          };
+          const start = line.offset;
+          const end = line.offset + line.duration;
+          return `${idx + 1}\n${formatTime(start)} --> ${formatTime(end)}\n${
+            line.text
+          }`;
+        })
+        .join("\n\n");
     const filename = normalizeFilename(
       [
         mediaTitle(source).replace(/\s+/gu, "").toLowerCase(),
@@ -102,9 +137,9 @@ async function saveTranscript(
     const filepath = normalizePath(`${folder.path}/${filename}`);
     let subtitle = plugin.app.vault.getFileByPath(filepath);
     if (subtitle) {
-      await plugin.app.vault.modify(subtitle, content);
+      await plugin.app.vault.modify(subtitle, vttContent);
     } else {
-      subtitle = await plugin.app.vault.create(filepath, content);
+      subtitle = await plugin.app.vault.create(filepath, vttContent);
     }
 
     new Notice(`Transcript saved to ${subtitle.path}`);

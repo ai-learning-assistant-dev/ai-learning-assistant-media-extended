@@ -7,7 +7,7 @@ export default async function initPort() {
   const port = await new Promise<MessagePort>((resolve, reject) => {
     function onMessage({ data, ports }: MessageEvent<any>) {
       console.log("got message", data, ports);
-    if (data !== PORT_MESSAGE_ID_PLACEHOLDER) return;
+      if (data !== PORT_MESSAGE_ID_PLACEHOLDER) return;
       resolve(ports[0]);
       console.log("got port");
       window.removeEventListener("message", onMessage);

@@ -38,7 +38,7 @@ export default class MediaPlugin extends LifeCycle {
     if (this.#trustedTypesPolicy) {
       return new DOMParser().parseFromString(
         this.#trustedTypesPolicy.createHTML(text) as any,
-        "text/html"
+        "text/html",
       );
     }
     return new DOMParser().parseFromString(text, "text/html");
@@ -47,7 +47,7 @@ export default class MediaPlugin extends LifeCycle {
     if (this.#trustedTypesPolicy) {
       return new DOMParser().parseFromString(
         this.#trustedTypesPolicy.createHTML(text) as any,
-        "text/xml"
+        "text/xml",
       );
     }
     return new DOMParser().parseFromString(text, "text/xml");
@@ -84,19 +84,19 @@ export default class MediaPlugin extends LifeCycle {
     this.register(
       this.controller.on("mx-toggle-controls", ({ payload: showWebsite }) => {
         document.body.classList.toggle("mx-show-controls", showWebsite);
-      })
+      }),
     );
     if (isNativePlayer) {
       this.register(
         this.controller.on("mx-toggle-controls", ({ payload: showWebsite }) => {
           this.media.controls = showWebsite;
-        })
+        }),
       );
     }
     this.register(
       this.controller.on("mx-toggle-webfs", ({ payload: enableWebFs }) => {
         document.body.classList.toggle("mx-fs-enable", enableWebFs);
-      })
+      }),
     );
     document.body.classList.add("mx-play-ready");
     this.controller.send("mx-play-ready", void 0);
@@ -148,7 +148,7 @@ export default class MediaPlugin extends LifeCycle {
    */
   async untilMediaReady(
     event: keyof typeof readyStateEventMap = "canplay",
-    timeout = 5e3
+    timeout = 5e3,
   ) {
     if (this.media.readyState >= readyStateEventMap[event]) return;
     let timeoutId = -1;

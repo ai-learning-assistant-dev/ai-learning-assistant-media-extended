@@ -105,6 +105,7 @@ export async function modifyBilibiliSession(
 }
 
 export interface BilibiliFetch {
+  // @ts-ignore
   <R = any>(
     url: string | URL,
     {

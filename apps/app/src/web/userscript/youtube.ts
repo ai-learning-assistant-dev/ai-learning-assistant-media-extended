@@ -89,7 +89,7 @@ const { waitForSelector, MediaPlugin } = requireMx();
 export default class YouTubePlugin extends MediaPlugin {
   async findMedia(): Promise<HTMLMediaElement> {
     const media = await waitForSelector<HTMLMediaElement>(
-      "ytd-app #movie_player video"
+      "ytd-app #movie_player video",
     );
     this.app = media.closest<HTMLElement>("ytd-app")!;
     this.moviePlayer = media.closest<HTMLElement>("#movie_player")!;
@@ -149,7 +149,8 @@ export default class YouTubePlugin extends MediaPlugin {
         const endTime = startTime + dur;
         const text =
           this.parseHTML(cue.textContent!).documentElement.textContent ??
-          cue.textContent ?? "";
+          cue.textContent ??
+          "";
         return { id: i.toString(), startTime, endTime, text };
       }),
       metadata,
@@ -198,7 +199,7 @@ export default class YouTubePlugin extends MediaPlugin {
       'button.ytp-button[data-tooltip-target-id="ytp-autonav-toggle-button"]';
     const autoPlayButton = await waitForSelector<HTMLButtonElement>(
       autoPlayButtonSelector,
-      this.app
+      this.app,
     );
 
     if (!autoPlayButton) {
@@ -234,7 +235,7 @@ export default class YouTubePlugin extends MediaPlugin {
 
     (async () => {
       const fsButton = await waitForSelector<HTMLButtonElement>(
-        "#movie_player .ytp-size-button"
+        "#movie_player .ytp-size-button",
       );
       let retries = 0;
       while (!this.isCinematicsMode() && retries++ < 5) {

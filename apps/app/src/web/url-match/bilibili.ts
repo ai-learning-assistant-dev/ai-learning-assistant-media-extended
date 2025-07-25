@@ -1,7 +1,7 @@
+import { MediaHost } from "@/info/supported";
 import type { TempFragment } from "@/lib/hash/temporal-frag";
 import { isTimestamp, parseTempFrag } from "@/lib/hash/temporal-frag";
 import { noHashUrl } from "@/lib/url";
-import { MediaHost } from "../../info/supported";
 import {
   removeHashTempFragment,
   type URLDetecter,

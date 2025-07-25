@@ -11,7 +11,7 @@ const policy = window.trustedTypes?.createPolicy("mx", {
 
 export async function loadPlugin(
   code: string | undefined,
-  port: MsgCtrlRemote
+  port: MsgCtrlRemote,
 ): Promise<Plugin> {
   if (!code) return new Plugin(port);
   const script = `(function anonymous(require,module,exports){${code}\n})`;

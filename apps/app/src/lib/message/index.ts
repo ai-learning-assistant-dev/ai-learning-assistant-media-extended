@@ -1,5 +1,6 @@
 import type { Unsubscribe } from "nanoevents";
 import { createEventEmitter } from "@/lib/emitter";
+import { PORT_READY_EVENT } from "../remote-player/const";
 import type { InvokeMessage, InvokeRespMessage } from "./type";
 import {
   NoHanlderError,
@@ -9,7 +10,6 @@ import {
   isInvokeRespMessage,
   isSentMessage,
 } from "./type";
-import { PORT_READY_EVENT } from "../remote-player/const";
 
 type ActionResult = {
   value: any;

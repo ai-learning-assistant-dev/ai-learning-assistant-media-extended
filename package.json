@@ -6,7 +6,7 @@
     "turbo": "latest"
   },
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build --filter=./apps/app/",
     "build-docs": "turbo run build --filter=./apps/docs/",
     "dev": "turbo run dev"
   },
@@ -14,5 +14,11 @@
     "neverBuiltDependencies": [
       "electron"
     ]
+  },
+  "dependencies": {
+    "@types/streamsaver": "2.0.5",
+    "media-captions": "^0.0.18",
+    "node-html-parser": "^7.0.1",
+    "streamsaver": "^2.0.6"
   }
 }
