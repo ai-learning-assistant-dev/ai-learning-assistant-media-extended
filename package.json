@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/streamsaver": "2.0.5",
+    "crypto-js": "^4.2.0",
     "media-captions": "^0.0.18",
     "node-html-parser": "^7.0.1",
     "streamsaver": "^2.0.6"

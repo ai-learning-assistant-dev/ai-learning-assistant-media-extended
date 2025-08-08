@@ -13,6 +13,21 @@ export class YoutubeTranscriptError extends Error {
   }
 }
 
+export class BilibiliTranscriptError extends Error {
+  constructor(err: unknown) {
+    if (!(err instanceof Error)) {
+      super("");
+      return;
+    }
+
+    if (err.message.includes("ERR_INVALID_URL")) {
+      super("Invalid bilibili URL");
+    } else {
+      super(err.message);
+    }
+  }
+}
+
 export interface TranscriptConfig {
   lang?: string;
   country?: string;

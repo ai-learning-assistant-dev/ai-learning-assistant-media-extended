@@ -48,6 +48,9 @@ export class YoutubeTranscript {
             }: Trying ${paramsSource} params: ${paramsInfo}`,
           );
 
+          console.log("transcriptRequest.url =", transcriptRequest.url);
+          console.log("transcriptRequest.headers =", transcriptRequest.headers);
+          console.log("transcriptRequest.body =", transcriptRequest.body);
           const response = await requestUrl({
             url: transcriptRequest.url,
             method: "POST",
@@ -56,7 +59,7 @@ export class YoutubeTranscript {
           });
 
           const lines = parseTranscript(response.text);
-
+          console.log(`lines =`, lines);
           // If we got valid transcript lines, return success
           if (lines && lines.length > 0) {
             console.log(
