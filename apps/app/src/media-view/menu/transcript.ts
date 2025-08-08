@@ -13,6 +13,8 @@ import { mediaTitle } from "@/media-note/title";
 import type { TranscriptResponse } from "@/web/transcript/types";
 import { YoutubeTranscript } from "web/transcript/youtube";
 import type { PlayerContext } from ".";
+import { BilibiliTranscript } from "@/web/transcript/bilibili";
+import { stringifyTrack } from "@/transcript/stringify";
 
 export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
   // if (ctx.tracks.local.length === 0 && ctx.tracks.remote.length === 0) return;
@@ -64,6 +66,16 @@ export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
   });
 }
 
+function trackToTranscript(
+  track: WebsiteTextTrack,
+): TranscriptResponse {
+
+  return {
+    title: track.label || track.language || track.wid,
+    lines: [],
+  }
+}
+
 async function saveTranscript(
   { wid: id, language, label, kind }: WebsiteTextTrack,
   { source, plugin, player }: PlayerContext,
@@ -82,39 +94,19 @@ async function saveTranscript(
       new Notice(`Failed to save transcript: track ${id} not found`);
       return null;
     }
-    // If the track is a youtube video, we get youtube transcript
-    // If the track is a bilibili video, we get bilibili transcript
-    const transcript = await YoutubeTranscript.getTranscript(
-      source.jsonState.source,
-      {
-        country: "US",
+    if (source.type === "youtube") {
+      YoutubeTranscript.getTranscript(source.href, {
         lang: language,
-      },
-    );
+        country: "US",
+      });
+    }
+    const content = stringifyTrack(track, {
+      Source: source.jsonState.source,
+      Title: mediaTitle(source, player),
+      Language: language,
+      Label: label,
+    });
 
-    console.log(transcript.lines);
-    const vttContent =
-      "WEBVTT\n\n" +
-      transcript.lines
-        .filter((line) => line.text && line.text.trim() !== "")
-        .map((line, idx) => {
-          const formatTime = (s: number) => {
-            const h = String(Math.floor(s / 3600000)).padStart(2, "0");
-            const m = String(Math.floor((s % 3600000) / 60000)).padStart(
-              2,
-              "0",
-            );
-            const sec = String(Math.floor((s % 60000) / 1000)).padStart(2, "0");
-            const ms = String(Math.floor(s % 1000)).padStart(3, "0");
-            return `${h}:${m}:${sec}.${ms}`;
-          };
-          const start = line.offset;
-          const end = line.offset + line.duration;
-          return `${idx + 1}\n${formatTime(start)} --> ${formatTime(end)}\n${
-            line.text
-          }`;
-        })
-        .join("\n\n");
     const filename = normalizeFilename(
       [
         mediaTitle(source).replace(/\s+/gu, "").toLowerCase(),
@@ -137,9 +129,9 @@ async function saveTranscript(
     const filepath = normalizePath(`${folder.path}/${filename}`);
     let subtitle = plugin.app.vault.getFileByPath(filepath);
     if (subtitle) {
-      await plugin.app.vault.modify(subtitle, vttContent);
+      await plugin.app.vault.modify(subtitle, content);
     } else {
-      subtitle = await plugin.app.vault.create(filepath, vttContent);
+      subtitle = await plugin.app.vault.create(filepath, content);
     }
 
     new Notice(`Transcript saved to ${subtitle.path}`);

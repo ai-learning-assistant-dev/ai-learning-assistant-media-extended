@@ -38,10 +38,7 @@ export default class BilibiliPlugin extends MediaPlugin {
       if (!aid || !cid) {
         throw new BiliApiError("Missing aid or cid in player manifest", -1);
       }
-      const subtitles = await this.getBilibiliSubtitles(
-        aid.toString(),
-        cid.toString(),
-      );
+      const subtitles = await this.getBilibiliSubtitles(aid.toString(), cid.toString());
       if (subtitles === undefined || subtitles.length === 0) {
         console.warn("No subtitles found for this video");
         return [];
@@ -81,7 +78,7 @@ export default class BilibiliPlugin extends MediaPlugin {
           response.status,
         );
       }
-      const res = (await response.json()) as PlayerV2Response;
+      const res = await response.json() as PlayerV2Response;
       if (res.code !== 0) {
         throw new BiliApiError(res.message, res.code);
       } else if (res.data?.subtitle?.subtitles === null) {
