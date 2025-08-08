@@ -33,14 +33,20 @@ export default class BilibiliPlugin extends MediaPlugin {
     return css;
   }
   async getTracks(): Promise<WebsiteTextTrack[]> {
-    const intercepter = (window as any)[storeId] as XHRIntercepter;
+    const { aid, cid } = window.player.getManifest();
     try {
-      const resp = await intercepter.getRequest();
-      const json = JSON.parse(resp) as PlayerV2Response;
-      if (json.code !== 0) {
-        throw new BiliApiError(json.message, json.code);
+      if (!aid || !cid) {
+        throw new BiliApiError("Missing aid or cid in player manifest", -1);
       }
-      return json.data.subtitle.subtitles.map((sub) => {
+      const subtitles = await this.getBilibiliSubtitles(
+        aid.toString(),
+        cid.toString(),
+      );
+      if (subtitles === undefined || subtitles.length === 0) {
+        console.warn("No subtitles found for this video");
+        return [];
+      }
+      return subtitles.map((sub) => {
         const language = sub.lan.startsWith("ai-")
           ? sub.lan.substring(3)
           : sub.lan;
@@ -56,6 +62,40 @@ export default class BilibiliPlugin extends MediaPlugin {
     } catch (e) {
       console.error(e);
       return [];
+    }
+  }
+  async getBilibiliSubtitles(aid: string, cid: string) {
+    // 发送请求
+    const api_url = `https://api.bilibili.com/x/player/wbi/v2?${new URLSearchParams(
+      {
+        aid: aid,
+        cid: cid,
+      },
+    )}`;
+    try {
+      // api url prefix is different from video url, we need credentials to access it
+      const response = await fetch(api_url, { credentials: "include" });
+      if (!response.ok) {
+        throw new BiliApiError(
+          `Failed to fetch subtitles: ${response.statusText}`,
+          response.status,
+        );
+      }
+      const res = (await response.json()) as PlayerV2Response;
+      if (res.code !== 0) {
+        throw new BiliApiError(res.message, res.code);
+      } else if (res.data?.subtitle?.subtitles === null) {
+        console.warn("No subtitles available for this video");
+        return [];
+      }
+      return res.data.subtitle.subtitles;
+    } catch (error) {
+      console.error("Error fetching subtitles:", error);
+      if (error instanceof BiliApiError) {
+        throw error;
+      } else {
+        throw new BiliApiError("Failed to fetch subtitles", -1);
+      }
     }
   }
   async getTrack(id: string): Promise<VTTContent | null> {

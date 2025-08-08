@@ -6,6 +6,7 @@ import { handleExternalLinkMenu } from "@/media-note/link-click";
 import { copyScreenshot } from "@/media-note/timestamp/screenshot";
 import type MxPlugin from "@/mx-main";
 import type { MediaViewType } from "../view-type";
+import { downloadMenu } from "./download";
 import { muteMenu } from "./mute";
 import { pipMenu } from "./pip";
 import { speedMenu } from "./speed";
@@ -126,6 +127,7 @@ export default function registerMediaMenu(this: MxPlugin) {
       webpageMenu(menu, ctx, source);
       if (source === "player-menu-embed" || source === "more-options") {
         transcriptMenu(menu, ctx);
+        downloadMenu(menu, ctx);
         menu.addItem((item) =>
           item
             .setTitle("Open media note")
@@ -136,16 +138,6 @@ export default function registerMediaMenu(this: MxPlugin) {
                 await ctx.plugin.mediaNote.getNote(ctx.source, ctx.player),
                 "split",
               );
-            }),
-        );
-        // 添加下载按钮
-        menu.addItem((item) =>
-          item
-            .setTitle("Download")
-            .setIcon("download")
-            .setSection("action")
-            .onClick(async () => {
-              console.log("");
             }),
         );
         urlMenu(menu, ctx);

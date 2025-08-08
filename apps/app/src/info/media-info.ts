@@ -9,6 +9,7 @@ export interface FileMediaInfo {
   type: MediaType;
   file: TFile;
   hash: string;
+  id?: string;
 }
 
 export function isFileMediaInfo(info: unknown): info is FileMediaInfo {
