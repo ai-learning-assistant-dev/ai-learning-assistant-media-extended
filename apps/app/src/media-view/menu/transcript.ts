@@ -10,11 +10,11 @@ import { normalizeFilename } from "@/lib/norm";
 import { WebiviewMediaProvider } from "@/lib/remote-player/provider";
 import { uniq } from "@/lib/uniq";
 import { mediaTitle } from "@/media-note/title";
+import { stringifyTrack } from "@/transcript/stringify";
+import { BilibiliTranscript } from "@/web/transcript/bilibili";
 import type { TranscriptResponse } from "@/web/transcript/types";
 import { YoutubeTranscript } from "web/transcript/youtube";
 import type { PlayerContext } from ".";
-import { BilibiliTranscript } from "@/web/transcript/bilibili";
-import { stringifyTrack } from "@/transcript/stringify";
 
 export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
   // if (ctx.tracks.local.length === 0 && ctx.tracks.remote.length === 0) return;
@@ -66,14 +66,11 @@ export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
   });
 }
 
-function trackToTranscript(
-  track: WebsiteTextTrack,
-): TranscriptResponse {
-
+function trackToTranscript(track: WebsiteTextTrack): TranscriptResponse {
   return {
     title: track.label || track.language || track.wid,
     lines: [],
-  }
+  };
 }
 
 async function saveTranscript(

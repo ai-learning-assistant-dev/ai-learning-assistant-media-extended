@@ -88,8 +88,8 @@ export const getJson = async <T = any>(url: string) => {
  * @param url 链接
  */
 export const getJsonWithCredentials = async <T = any>(url: string) => {
-  // const response = await send(withCredentials(jsonRequest(url)));
-  const response = await fetch(url);
+  const response = await send(withCredentials(jsonRequest(url)));
+  // const response = await fetch(url);
   return convertToJson<T>(response);
 };
 

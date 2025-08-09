@@ -78,6 +78,7 @@ export function useTextTracks() {
   const localTracks = useMediaViewStore((s) => s.textTracks.local);
   const remoteTracks = useMediaViewStore((s) => s.textTracks.remote);
   const setRemoteTracks = useMediaViewStore((s) => s.updateWebsiteTracks);
+  const setVideoInfo = useMediaViewStore((s) => s.setVideoInfo);
   const provider = useMediaProvider();
   const genDefaultTrackPredicate = useDefaultTrack();
 
@@ -90,6 +91,14 @@ export function useTextTracks() {
       if (tracks.length !== 0) console.debug("Remote tracks loaded", tracks);
     });
   }, [provider, setRemoteTracks]);
+
+  useEffect(() => {
+    if (!(provider instanceof WebiviewMediaProvider)) return;
+    return provider.media.on("mx-video-info", ({ payload: { videoInfo } }) => {
+      setVideoInfo(videoInfo);
+      if (videoInfo) console.debug("mx-video-info loaded", videoInfo);
+    });
+  }, [provider, setVideoInfo]);
 
   const providerRef =
     useRef<WeakMap<WebsiteTextTrack[], WebiviewMediaProvider>>();

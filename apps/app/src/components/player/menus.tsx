@@ -140,6 +140,7 @@ export function MoreOptions() {
       disableWebFullscreen,
       toggleWebFullscreen,
       textTracks: tracks,
+      videoInfo,
     } = store.getState();
     workspace.trigger(
       "mx:media-menu",
@@ -156,6 +157,7 @@ export function MoreOptions() {
           local: tracks.local,
           remote: dedupeWebsiteTrack(tracks.remote, tracks.local),
         },
+        videoInfo,
         transform,
         plugin,
         disableWebFullscreen,

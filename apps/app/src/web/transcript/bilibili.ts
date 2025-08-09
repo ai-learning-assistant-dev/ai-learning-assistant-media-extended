@@ -2,16 +2,16 @@
 // import type { MsgCtrlLocal } from "@/lib/remote-player/interface";
 // import type MxPlugin from "@/mx-main";
 import { request, requestUrl } from "obsidian";
+import { WebsiteTextTrack } from "@/info/track-info";
+import { getUserAgent } from "@/lib/remote-player/ua";
+import { getSession } from "@/lib/require";
+import { useAppId } from "@/settings/context";
 import type {
   TranscriptConfig,
   TranscriptLine,
   TranscriptResponse,
 } from "./types";
-import { useAppId } from "@/settings/context";
-import { getUserAgent } from "@/lib/remote-player/ua";
 import { BilibiliTranscriptError } from "./types";
-import { getSession } from "@/lib/require";
-import { WebsiteTextTrack } from "@/info/track-info";
 
 export class BilibiliTranscript {
   public static async getTranscript(
@@ -74,7 +74,7 @@ export class BilibiliTranscript {
    * @returns 包含视频标题、bvid、aid和cid的对象
    * @throws 如果URL无效、无法提取ID或API请求失败
    */
-  static async getVideoInfo(videoUrl: string): Promise<{
+  public static async getVideoInfo(videoUrl: string): Promise<{
     title: string;
     bvid: string;
     aid: number;

@@ -3,6 +3,7 @@ import type { App, TFile, Vault } from "obsidian";
 import { createContext, useContext } from "react";
 // eslint-disable-next-line import/no-deprecated -- don't use equalityFn here
 import { createStore, useStore } from "zustand";
+import { type MediaInfo, mediaInfoFromFile } from "@/info/media-info";
 import { type MediaURL } from "@/info/media-url";
 import type { MediaHost } from "@/info/supported";
 import type { LoadedTextTrack, WebsiteTextTrack } from "@/info/track-info";
@@ -22,7 +23,7 @@ import {
 } from "@/media-view/view-type";
 import type MxPlugin from "@/mx-main";
 import type { MxSettings } from "@/settings/def";
-import { type MediaInfo, mediaInfoFromFile } from "../info/media-info";
+import type { DownloadVideoInfo } from "@/web/bili-api/dash";
 import { applyTempFrag, handleTempFrag } from "./state/apply-tf";
 import { handleCueUpdate } from "./state/handle-cue-update";
 
@@ -69,6 +70,8 @@ export interface MediaViewState {
   webHost?: Exclude<MediaHost, MediaHost.Generic>;
   updateWebHost: (webHost: MediaHost) => void;
   updateWebsiteTracks: (tracks: WebsiteTextTrack[]) => void;
+  videoInfo?: DownloadVideoInfo;
+  setVideoInfo: (info: DownloadVideoInfo) => void;
 }
 
 export function createMediaViewStore(plugin: MxPlugin) {
@@ -182,6 +185,11 @@ export function createMediaViewStore(plugin: MxPlugin) {
       }
     },
     textTracks: { local: [], remote: [] },
+    videoInfo: {
+      fragments: [],
+      input: { title: "", aid: "", cid: "" },
+    } as DownloadVideoInfo,
+    setVideoInfo: (info) => set({ videoInfo: info }),
     updateWebsiteTracks: (tracks) =>
       set(({ textTracks }) => ({
         textTracks: { ...textTracks, remote: tracks },

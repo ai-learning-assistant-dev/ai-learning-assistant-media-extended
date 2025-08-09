@@ -1,10 +1,7 @@
 import type { Menu, TFile } from "obsidian";
 import streamSaver from "streamsaver";
-// @ts-ignore
-import type { DownloadVideoInputItem } from "@/web/bili-api/dash.ts";
-// @ts-ignore
-import { videoAudioDash, videoDashAvc } from "@/web/bili-api/dash.ts";
 import type { PlayerContext } from ".";
+import { MediaViewContext, createMediaViewStore } from "@/components/context";
 
 export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
@@ -33,27 +30,18 @@ async function downloadVideo({
   source,
   plugin,
   player,
+  videoInfo,
 }: PlayerContext): Promise<TFile | null> {
   console.log("soruce", source);
   console.log("player", player);
   console.log("plugin", plugin);
-  const bvid =
-    typeof source.id === "string" ? source.id.replace(/^1@/, "") : "";
-  const { aid, cid } = window.player.getManifest();
-  const inputItem: DownloadVideoInputItem = {
-    // @ts-ignore
-    aid: aid.toString(),
-    // @ts-ignore
-    cid: cid.toString(),
-    title: bvid,
-  };
+  console.log("videoInfos", videoInfo);
   // @ts-ignore
-  const videoInfos = await videoDashAvc.downloadVideoInfo(inputItem);
-  console.log("videoInfos", videoInfos);
-  const title = bvid;
+  const url = videoInfo.fragments[0].url;
   // @ts-ignore
-  const url = videoInfos.iframe.url;
-  const size: any = undefined;
+  const size = videoInfo.fragments[0].size;
+  // @ts-ignore
+  const title = videoInfo.input.title || "video.mp4";
   const fileStream = streamSaver.createWriteStream(title, { size });
   const response = await fetch(url);
   if (!response.body) throw new Error("Stream not supported");

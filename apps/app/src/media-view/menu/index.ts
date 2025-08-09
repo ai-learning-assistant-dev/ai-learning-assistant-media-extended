@@ -24,6 +24,7 @@ export interface PlayerContext {
   setTransform: MediaViewState["setTransform"];
   transform: MediaViewState["transform"];
   tracks: MediaViewState["textTracks"];
+  videoInfo: MediaViewState["videoInfo"];
   controls: boolean | undefined;
   disableWebFullscreen: boolean | undefined;
   toggleWebFullscreen: (enableWebFs: boolean) => void;

@@ -3,6 +3,7 @@ import type { MediaErrorCode } from "@vidstack/react";
 import type { WebsiteTextTrack } from "@/info/track-info";
 import type { VTTContent } from "@/transcript/handle/type";
 import type { BilibiliPlayerManifest } from "@/web/bili-api/base";
+import type { DownloadVideoInfo } from "@/web/bili-api/dash";
 import type { MessageController, Nil } from "../message";
 // import { enumerate } from "../must-include";
 import type { ScreenshotInfo } from "../screenshot";
@@ -215,6 +216,7 @@ export type MsgCtrlRemote = MessageController<
 type CustomEventWithPayload = {
   "mx-open-browser": { url: string; message?: string };
   "mx-text-tracks": { tracks: WebsiteTextTrack[] };
+  "mx-video-info": { videoInfo: DownloadVideoInfo };
 };
 
 export type MsgCtrlLocal = MessageController<

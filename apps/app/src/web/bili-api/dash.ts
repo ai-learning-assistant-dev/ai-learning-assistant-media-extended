@@ -72,7 +72,7 @@ export const descendingBigIntSort =
     -ascendingBigIntSort(itemProp)(a, b);
 
 export const videoApi = (params: string) =>
-  `https://api.bilibili.com/x/player/playurl?${params}`;
+  `https://api.bilibili.com/x/player/wbi/playurl?${params}`;
 export const bangumiApi = (params: string) =>
   `https://api.bilibili.com/pgc/player/web/playurl?${params}`;
 /** 含有番剧的页面 */

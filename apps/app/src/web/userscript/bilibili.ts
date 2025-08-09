@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import streamSaver from "streamsaver";
 import type { WebsiteTextTrack } from "@/info/track-info";
 import type { XHRIntercepter } from "@/lib/remote-player/lib/xhr-hijack";
 import type { VTTContent } from "@/transcript/handle/type";
+import type {
+  DownloadVideoInfo,
+  DownloadVideoInputItem,
+} from "@/web/bili-api/dash";
+import { videoDashAvc } from "@/web/bili-api/dash";
 import { BiliApiError } from "../bili-api/base";
 import type { PlayerV2Response } from "../bili-api/player-v2";
 import type { SubtitlesConfig } from "../bili-api/subtitle";
@@ -33,12 +39,15 @@ export default class BilibiliPlugin extends MediaPlugin {
     return css;
   }
   async getTracks(): Promise<WebsiteTextTrack[]> {
-    const { aid, cid } = window.player.getManifest();
+    const { aid, cid, bvid } = window.player.getManifest();
     try {
       if (!aid || !cid) {
         throw new BiliApiError("Missing aid or cid in player manifest", -1);
       }
-      const subtitles = await this.getBilibiliSubtitles(aid.toString(), cid.toString());
+      const subtitles = await this.getBilibiliSubtitles(
+        aid.toString(),
+        cid.toString(),
+      );
       if (subtitles === undefined || subtitles.length === 0) {
         console.warn("No subtitles found for this video");
         return [];
@@ -61,6 +70,28 @@ export default class BilibiliPlugin extends MediaPlugin {
       return [];
     }
   }
+  async getVideoInfo(): Promise<DownloadVideoInfo> {
+    const { aid, cid, bvid } = window.player.getManifest();
+    try {
+      if (!aid || !cid) {
+        throw new BiliApiError("Missing aid or cid in player manifest", -1);
+      }
+      const inputItem: DownloadVideoInputItem = {
+        // @ts-ignore
+        aid: aid.toString(),
+        // @ts-ignore
+        cid: cid.toString(),
+        title: bvid,
+      };
+      const videoInfos = await videoDashAvc.downloadVideoInfo(inputItem);
+      console.log("videoInfos", videoInfos);
+      return videoInfos;
+    } catch (e) {
+      console.error(e);
+      throw new BiliApiError("Failed to get video info", -1);
+    }
+  }
+
   async getBilibiliSubtitles(aid: string, cid: string) {
     // 发送请求
     const api_url = `https://api.bilibili.com/x/player/wbi/v2?${new URLSearchParams(
@@ -78,7 +109,7 @@ export default class BilibiliPlugin extends MediaPlugin {
           response.status,
         );
       }
-      const res = await response.json() as PlayerV2Response;
+      const res = (await response.json()) as PlayerV2Response;
       if (res.code !== 0) {
         throw new BiliApiError(res.message, res.code);
       } else if (res.data?.subtitle?.subtitles === null) {
@@ -130,6 +161,33 @@ export default class BilibiliPlugin extends MediaPlugin {
     await this.getTracks().then((tracks) => {
       if (tracks.length > 0) this.controller.send("mx-text-tracks", { tracks });
     });
+    await this.getVideoInfo().then(async (value) => {
+      console.log("mx-video-info", value);
+      if (value) this.controller.send("mx-video-info", { videoInfo: value });
+      // @ts-ignore
+      const url = value.fragments[1].url;
+      // @ts-ignore
+      const size = value.fragments[1].size;
+      // @ts-ignore
+      const title = value.input.title || "video.m4a";
+      const fileStream = streamSaver.createWriteStream(title, { size });
+      const response = await fetch(url);
+      if (!response.body) throw new Error("Stream not supported");
+      await response.body.pipeTo(fileStream);
+    });
+  }
+
+  async downLoadVideo(value: DownloadVideoInfo): Promise<void> {
+    // @ts-ignore
+    const url = value.fragments[1].url;
+    // @ts-ignore
+    const size = value.fragments[1].size;
+    // @ts-ignore
+    const title = value.input.title || "video.m4a";
+    const fileStream = streamSaver.createWriteStream(title, { size });
+    const response = await fetch(url);
+    if (!response.body) throw new Error("Stream not supported");
+    await response.body.pipeTo(fileStream);
   }
 
   get player() {
