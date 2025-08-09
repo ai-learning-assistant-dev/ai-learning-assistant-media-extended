@@ -1,7 +1,7 @@
-import type { Menu, TFile } from "obsidian";
-import streamSaver from "streamsaver";
+import type { Menu } from "obsidian";
+import { normalizePath, TFile, Notice } from "obsidian";
+import { getSaveFolder } from "@/lib/folder";
 import type { PlayerContext } from ".";
-import { MediaViewContext, createMediaViewStore } from "@/components/context";
 
 export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
@@ -37,55 +37,37 @@ async function downloadVideo({
   console.log("plugin", plugin);
   console.log("videoInfos", videoInfo);
   // @ts-ignore
-  const url = videoInfo.fragments[0].url;
+  if (!videoInfo || !videoInfo.fragments || videoInfo.fragments.length === 0) {
+    new Notice("请稍后再试,视频信息未加载完成");
+    return null;
+  }
+  const note = await plugin.mediaNote.getNote(source, player);
+  const folder = await getSaveFolder(
+    plugin.settings.getState().subtitleFolderPath,
+    { plugin, sourcePath: note.path },
+  );
   // @ts-ignore
-  const size = videoInfo.fragments[0].size;
-  // @ts-ignore
-  const title = videoInfo.input.title || "video.mp4";
-  const fileStream = streamSaver.createWriteStream(title, { size });
-  const response = await fetch(url);
-  if (!response.body) throw new Error("Stream not supported");
-  await response.body.pipeTo(fileStream);
+  const fragments = videoInfo.fragments;
+  for (const fragment of fragments) {
+    const url = fragment.url;
+    const size = fragment.size;
+    // @ts-ignore
+    const title = videoInfo.input.title + fragment.extension;
+    const filepath = normalizePath(`${folder.path}/${title}`);
+    // const fileStream = streamSaver.createWriteStream(title, { size });
+    const response = await fetch(url);
+    if (!response.body) throw new Error("Stream not supported");
+    // await response.body.pipeTo(fileStream);
+    const uint8Array = new Uint8Array(await response.arrayBuffer());
+    const existingFile = plugin.app.vault.getAbstractFileByPath(filepath);
+
+    if (existingFile instanceof TFile) {
+      await plugin.app.vault.modifyBinary(existingFile, uint8Array);
+      new Notice("媒体已下载完成,存储在: " + existingFile);
+    } else {
+      await plugin.app.vault.createBinary(filepath, uint8Array);
+      new Notice("媒体已下载完成,存储在: " + filepath);
+    }
+  }
   return null;
 }
-
-// async function saveAudio({
-//   source,
-//   plugin,
-//   player,
-// }: PlayerContext): Promise<TFile | null> {
-//   const instance = player.provider;
-//   if (
-//     !(instance instanceof WebiviewMediaProvider) ||
-//     !(source instanceof MediaURL)
-//   ) {
-//     new Notice("Cannot save transcript from this media");
-//     return null;
-//   }
-//   // 构造 DownloadVideoInputItem
-//   const inputItem = {
-//     aid: source.aid || "",
-//     cid: source.cid || "",
-//     title: getFriendlyTitle(true),
-//     quality: undefined as VideoQuality | undefined,
-//     allowQualityDrop: true,
-//   };
-//   // 获取下载 API（假设 provider 有 downloadApi 属性）
-//   const api = instance.downloadApi;
-//   if (!api || typeof api.downloadVideoInfo !== "function") {
-//     new Notice("No valid download API found");
-//     return null;
-//   }
-//   // 获取下载信息
-//   const videoInfo = await api.downloadVideoInfo(inputItem);
-//   if (!videoInfo || !videoInfo.fragments || videoInfo.fragments.length === 0) {
-//     new Notice("No downloadable audio found");
-//     return null;
-//   }
-//   // 构造下载 action
-//   const action = new DownloadVideoAction([videoInfo]);
-//   // 调用输出方式保存
-//   await streamSaverOutput.runAction(action);
-//   // 返回 null（如需返回文件对象，可扩展）
-//   return null;
-// }

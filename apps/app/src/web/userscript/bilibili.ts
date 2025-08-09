@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import streamSaver from "streamsaver";
 import type { WebsiteTextTrack } from "@/info/track-info";
-import type { XHRIntercepter } from "@/lib/remote-player/lib/xhr-hijack";
 import type { VTTContent } from "@/transcript/handle/type";
 import type {
   DownloadVideoInfo,
@@ -11,7 +9,6 @@ import { videoDashAvc } from "@/web/bili-api/dash";
 import { BiliApiError } from "../bili-api/base";
 import type { PlayerV2Response } from "../bili-api/player-v2";
 import type { SubtitlesConfig } from "../bili-api/subtitle";
-import { storeId } from "../preload/scripts/store-id";
 import { requireMx } from "./_require";
 
 const { waitForSelector, MediaPlugin } = requireMx();
@@ -164,30 +161,7 @@ export default class BilibiliPlugin extends MediaPlugin {
     await this.getVideoInfo().then(async (value) => {
       console.log("mx-video-info", value);
       if (value) this.controller.send("mx-video-info", { videoInfo: value });
-      // @ts-ignore
-      const url = value.fragments[1].url;
-      // @ts-ignore
-      const size = value.fragments[1].size;
-      // @ts-ignore
-      const title = value.input.title || "video.m4a";
-      const fileStream = streamSaver.createWriteStream(title, { size });
-      const response = await fetch(url);
-      if (!response.body) throw new Error("Stream not supported");
-      await response.body.pipeTo(fileStream);
     });
-  }
-
-  async downLoadVideo(value: DownloadVideoInfo): Promise<void> {
-    // @ts-ignore
-    const url = value.fragments[1].url;
-    // @ts-ignore
-    const size = value.fragments[1].size;
-    // @ts-ignore
-    const title = value.input.title || "video.m4a";
-    const fileStream = streamSaver.createWriteStream(title, { size });
-    const response = await fetch(url);
-    if (!response.body) throw new Error("Stream not supported");
-    await response.body.pipeTo(fileStream);
   }
 
   get player() {
