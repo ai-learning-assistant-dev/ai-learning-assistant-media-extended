@@ -8,7 +8,7 @@ export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
     const submenu = item
       .setSection("view")
-      .setTitle("Download audio")
+      .setTitle("Download video")
       .setIcon("download")
       .setSubmenu();
     submenu.addItem((item) =>
@@ -33,10 +33,6 @@ async function downloadVideo({
   player,
   videoInfo,
 }: PlayerContext): Promise<TFile | null> {
-  console.log("soruce", source);
-  console.log("player", player);
-  console.log("plugin", plugin);
-  console.log("videoInfos", videoInfo);
   // @ts-ignore
   if (!videoInfo || !videoInfo.fragments || videoInfo.fragments.length === 0) {
     new Notice("请稍后再试,视频信息未加载完成");
@@ -51,7 +47,6 @@ async function downloadVideo({
   const fragments = videoInfo.fragments;
   for (const fragment of fragments) {
     const url = fragment.url;
-    const size = fragment.size;
     // @ts-ignore
     const title = videoInfo.input.title + fragment.extension;
     const filepath = normalizePath(`${folder.path}/${title}`);
@@ -87,6 +82,8 @@ async function downloadVideo({
 
 /**
  * 用 Node.js https 下载资源并返回 Uint8Array
+ *
+ * 这里不能直接用fetch，因为headers会被Obsidian自带的覆盖掉
  */
 function downloadAsUint8Array(
   url: string,

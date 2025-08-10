@@ -81,7 +81,6 @@ export default class BilibiliPlugin extends MediaPlugin {
         title: bvid,
       };
       const videoInfos = await videoDashAvc.downloadVideoInfo(inputItem);
-      console.log("videoInfos", videoInfos);
       return videoInfos;
     } catch (e) {
       console.error(e);
@@ -159,7 +158,6 @@ export default class BilibiliPlugin extends MediaPlugin {
       if (tracks.length > 0) this.controller.send("mx-text-tracks", { tracks });
     });
     await this.getVideoInfo().then(async (value) => {
-      console.log("mx-video-info", value);
       if (value) this.controller.send("mx-video-info", { videoInfo: value });
     });
   }
