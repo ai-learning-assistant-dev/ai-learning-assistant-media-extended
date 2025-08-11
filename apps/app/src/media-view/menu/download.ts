@@ -4,6 +4,7 @@ import { normalizePath, TFile, Notice } from "obsidian";
 import { getSaveFolder } from "@/lib/folder";
 import type { PlayerContext } from ".";
 
+type DownloadExtension = "all" | ".mp4" | ".m4a";
 export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
     if (
@@ -16,14 +17,30 @@ export function downloadMenu(menu: Menu, ctx: PlayerContext) {
         .setTitle("Download video")
         .setIcon("download")
         .setSubmenu();
-      submenu.addItem((item) =>
-        item.setTitle("下载视频").onClick(async () => {
-          const file = await downloadVideo(ctx);
-          if (file) {
-            await ctx.plugin.app.workspace.openLinkText(file.path, "", "split");
-          }
-        }),
-      );
+      for (const downloadSource of [
+        "all",
+        ".mp4",
+        ".m4a",
+      ] as DownloadExtension[]) {
+        let title: string;
+        if (downloadSource === "all") {
+          title = "All";
+        } else {
+          title = (ctx.videoInfo?.input?.title ?? "default") + downloadSource;
+        }
+        submenu.addItem((item) =>
+          item.setTitle(title).onClick(async () => {
+            const file = await downloadVideo(ctx, downloadSource);
+            if (file) {
+              await ctx.plugin.app.workspace.openLinkText(
+                file.path,
+                "",
+                "split",
+              );
+            }
+          }),
+        );
+      }
     } else {
       item
         .setSection("view")
@@ -39,12 +56,10 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
 }
 // @ts-ignore
-async function downloadVideo({
-  source,
-  plugin,
-  player,
-  videoInfo,
-}: PlayerContext): Promise<TFile | null> {
+async function downloadVideo(
+  { source, plugin, player, videoInfo }: PlayerContext,
+  downloadSource: DownloadExtension,
+): Promise<TFile | null> {
   const note = await plugin.mediaNote.getNote(source, player);
   const folder = await getSaveFolder(
     plugin.settings.getState().subtitleFolderPath,
@@ -53,11 +68,14 @@ async function downloadVideo({
   // @ts-ignore
   const fragments = videoInfo.fragments;
   for (const fragment of fragments) {
+    if (downloadSource !== "all" && downloadSource !== fragment.extension)
+      continue;
     const url = fragment.url;
     // @ts-ignore
     const title = videoInfo.input.title + fragment.extension;
     const filepath = normalizePath(`${folder.path}/${title}`);
     try {
+      new Notice("正在下载");
       // 从 URL 下载成 Uint8Array
       const uint8Array = await downloadAsUint8Array(url, {
         Referer: "https://www.bilibili.com/", // 改成你的 Referer
