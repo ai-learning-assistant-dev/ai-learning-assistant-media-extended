@@ -24,6 +24,14 @@ export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
     ...ctx.tracks.remote.map((t) => ({ ...t, _type: "remote" as const })),
   ];
   menu.addItem((item) => {
+    if (tracks.length === 0) {
+      item
+        .setSection("view")
+        .setTitle("Open transcript (need login)")
+        .setIcon("subtitles")
+        .setDisabled(true);
+      return;
+    }
     const submenu = item
       .setSection("view")
       .setTitle("Open transcript")

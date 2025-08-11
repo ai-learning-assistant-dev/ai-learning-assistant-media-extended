@@ -6,19 +6,31 @@ import type { PlayerContext } from ".";
 
 export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
-    const submenu = item
-      .setSection("view")
-      .setTitle("Download video")
-      .setIcon("download")
-      .setSubmenu();
-    submenu.addItem((item) =>
-      item.setTitle("下载视频").onClick(async () => {
-        const file = await downloadVideo(ctx);
-        if (file) {
-          await ctx.plugin.app.workspace.openLinkText(file.path, "", "split");
-        }
-      }),
-    );
+    if (
+      ctx.videoInfo &&
+      ctx.videoInfo.fragments &&
+      ctx.videoInfo.fragments.length !== 0
+    ) {
+      const submenu = item
+        .setSection("view")
+        .setTitle("Download video")
+        .setIcon("download")
+        .setSubmenu();
+      submenu.addItem((item) =>
+        item.setTitle("下载视频").onClick(async () => {
+          const file = await downloadVideo(ctx);
+          if (file) {
+            await ctx.plugin.app.workspace.openLinkText(file.path, "", "split");
+          }
+        }),
+      );
+    } else {
+      item
+        .setSection("view")
+        .setTitle("Download video (need login)")
+        .setIcon("download")
+        .setDisabled(true);
+    }
   });
 }
 
@@ -33,11 +45,6 @@ async function downloadVideo({
   player,
   videoInfo,
 }: PlayerContext): Promise<TFile | null> {
-  // @ts-ignore
-  if (!videoInfo || !videoInfo.fragments || videoInfo.fragments.length === 0) {
-    new Notice("请稍后再试,视频信息未加载完成");
-    return null;
-  }
   const note = await plugin.mediaNote.getNote(source, player);
   const folder = await getSaveFolder(
     plugin.settings.getState().subtitleFolderPath,

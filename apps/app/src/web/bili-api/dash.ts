@@ -171,7 +171,7 @@ export interface DownloadVideoFragment {
 /** 调用 API 后得到的视频详细信息, 包括下载链接, 清晰度, 分段等 */
 export class DownloadVideoInfo {
   public input: DownloadVideoInputItem | undefined;
-
+  fragments: DownloadVideoFragment[];
   constructor(parameters: {
     input: DownloadVideoInputItem;
     jsonData: any;
@@ -180,6 +180,7 @@ export class DownloadVideoInfo {
     currentQuality: VideoQuality | undefined;
   }) {
     Object.assign(this, parameters);
+    this.fragments = parameters.fragments;
   }
 }
 export type TestPattern = (string | RegExp)[];
