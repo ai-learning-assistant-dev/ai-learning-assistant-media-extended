@@ -98,8 +98,8 @@ jobs:
           owner="${GITHUB_REPOSITORY%/*}"          # 提取 owner 部分
           repo_name="${GITHUB_REPOSITORY#*/}"       # 提取仓库名部分
 
-          # 移除仓库名的 "obsidian-" 前缀（如果没有则不会被处理）
-          processed_repo_name="ala-${repo_name#obsidian-}"
+          # 移除仓库名的 "ai-learning-assistant-" 前缀（如果没有则不会被处理）
+          processed_repo_name="ala-${repo_name#ai-learning-assistant-}"
 
           # 创建目标目录 (owner/processed_repo_name)
           mkdir -p "gitee-repo/$owner/$processed_repo_name"
