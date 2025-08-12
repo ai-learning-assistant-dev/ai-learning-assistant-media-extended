@@ -45,11 +45,10 @@ jobs:
           else
             echo "✅ Tag $GITHUB_REF_NAME is merged into a protected branch"
           fi
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Use pnpm ${{ matrix.node-version }}
+        uses: pnpm/action-setup@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
+          version: 8
       - run: pnpm i
       - run: pnpm build
       # 上传构建产物
