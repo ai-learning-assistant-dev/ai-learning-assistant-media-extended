@@ -88,7 +88,7 @@ const opts = {
     inlineCodePlugin(
       {
         external: ['media-extended', 'fs/promises', 'electron', 'path'],
-        ...(isProd ? { drop: [], } : {})
+        ...(isProd ? { drop: ["console"], } : {})
       }
     ),
     {
@@ -170,7 +170,7 @@ async function buildWorker(
     write: false, // write in memory
     outfile: scriptName,
     bundle: true,
-    minify: false,
+    minify: true,
     format: "cjs",
     target: "es2022",
     ...extraConfig,

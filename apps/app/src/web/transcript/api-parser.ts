@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { parse } from "node-html-parser";
+// import { parse } from "node-html-parser";
 import * as protobuf from "protobufjs";
-import type { TranscriptConfig, TranscriptLine, VideoData } from "./types";
+import type { TranscriptConfig, TranscriptLine } from "./types";
 import { YoutubeTranscriptError } from "./types";
 
 const YOUTUBE_TITLE_REGEX = new RegExp(
@@ -15,7 +15,7 @@ function generateTranscriptParams(
   videoId: string,
   useAsrStyle: boolean,
   field6Value: number,
-  lang = "en",
+  _lang = "en",
 ): string {
   const writer = protobuf.Writer.create();
 
@@ -295,7 +295,7 @@ export function parseVideoPageWithFallbacks(
     body: string;
   }>;
 } {
-  const parsedBody = parse(htmlContent);
+  // const parsedBody = parse(htmlContent);
 
   // Extract title
   const titleMatch = htmlContent.match(YOUTUBE_TITLE_REGEX);

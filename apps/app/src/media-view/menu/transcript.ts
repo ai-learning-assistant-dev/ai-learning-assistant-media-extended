@@ -11,9 +11,6 @@ import { WebiviewMediaProvider } from "@/lib/remote-player/provider";
 import { uniq } from "@/lib/uniq";
 import { mediaTitle } from "@/media-note/title";
 import { stringifyTrack } from "@/transcript/stringify";
-import { BilibiliTranscript } from "@/web/transcript/bilibili";
-import type { TranscriptResponse } from "@/web/transcript/types";
-import { YoutubeTranscript } from "web/transcript/youtube";
 import type { PlayerContext } from ".";
 
 export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
@@ -74,13 +71,6 @@ export function transcriptMenu(menu: Menu, ctx: PlayerContext) {
   });
 }
 
-function trackToTranscript(track: WebsiteTextTrack): TranscriptResponse {
-  return {
-    title: track.label || track.language || track.wid,
-    lines: [],
-  };
-}
-
 async function saveTranscript(
   { wid: id, language, label, kind }: WebsiteTextTrack,
   { source, plugin, player }: PlayerContext,
@@ -98,12 +88,6 @@ async function saveTranscript(
     if (!track) {
       new Notice(`Failed to save transcript: track ${id} not found`);
       return null;
-    }
-    if (source.type === "youtube") {
-      YoutubeTranscript.getTranscript(source.href, {
-        lang: language,
-        country: "US",
-      });
     }
     const content = stringifyTrack(track, {
       Source: source.jsonState.source,

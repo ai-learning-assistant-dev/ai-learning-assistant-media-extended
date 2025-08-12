@@ -7,7 +7,14 @@ import type { PlayerContext } from ".";
 type DownloadExtension = "all" | ".mp4" | ".m4a";
 export function downloadMenu(menu: Menu, ctx: PlayerContext) {
   menu.addItem((item) => {
-    if (
+    // YouTube暂时不支持下载功能
+    if (ctx.source.type === "youtube") {
+      item
+        .setSection("view")
+        .setTitle("Download video (not available)")
+        .setIcon("download")
+        .setDisabled(true);
+    } else if (
       ctx.videoInfo &&
       ctx.videoInfo.fragments &&
       ctx.videoInfo.fragments.length !== 0

@@ -12,6 +12,7 @@ export class YoutubeTranscript {
     try {
       const videoPageBody = await request(url);
       const videoData = parseVideoPageWithFallbacks(videoPageBody, config);
+      console.log("videoData =", videoData);
 
       console.log(
         `🚀 DEBUG: Starting transcript fetch with ${videoData.transcriptRequests.length} different parameter combinations`,
