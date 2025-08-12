@@ -34,7 +34,7 @@ export class TranscriptLoader extends Component {
   async loadCaption(file: FileInfo): Promise<ParsedCaptionsResult | null> {
     if (!isSupportedCaptionExt(file.extension)) return null;
     const content = await this.#readFile(file);
-    return parseTrack(content, { type: file.extension });
+    return parseTrack(content as string, { type: file.extension });
   }
 
   #readFile(file: FileInfo) {
@@ -51,7 +51,7 @@ export class TranscriptLoader extends Component {
     const content: string =
       track.src instanceof URL
         ? await this.#loadFromURL(track.src)
-        : await this.#readFile(track.src);
+        : ((await this.#readFile(track.src)) as string);
     return {
       ...track,
       content: await parseTrack(content, { type: track.type }),
@@ -61,7 +61,7 @@ export class TranscriptLoader extends Component {
     const content: string =
       track.src instanceof URL
         ? await this.#loadFromURL(track.src)
-        : await this.#readFile(track.src);
+        : ((await this.#readFile(track.src)) as string);
     return { ...track, content };
   }
   async loadTracks(...tracks: TextTrackInfo[]): Promise<LoadedTextTrack[]> {

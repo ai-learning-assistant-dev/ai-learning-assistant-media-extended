@@ -1,7 +1,7 @@
 {
   "name": "media-extended",
   "description": "",
-  "packageManager": "pnpm@8.11.0",
+  "packageManager": "pnpm@10.14.0",
   "devDependencies": {
     "turbo": "latest"
   },

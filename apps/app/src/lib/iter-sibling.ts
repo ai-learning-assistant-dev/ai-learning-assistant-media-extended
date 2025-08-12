@@ -13,7 +13,7 @@ export async function* iterSiblings(
   const fs = getFsPromise();
   if (!fs) return;
   const excludeSet = new Set(exclude);
-  const dir = await fs.opendir(dirPath, { encoding: "utf-8" });
+  const dir = await fs.opendir(dirPath, { encoding: "utf8" });
   for await (const f of dir) {
     if (!(f.isFile() || f.isSymbolicLink()) || excludeSet.has(f.name)) continue;
     yield toFileInfo(path.join(dirPath, f.name), path.sep);

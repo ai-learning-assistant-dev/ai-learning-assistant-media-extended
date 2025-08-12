@@ -43,7 +43,7 @@ jobs:
       - name: Use pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8.11.0
+          version: 10.14.0
       - run: pnpm i
       - run: pnpm build
       # 上传构建产物
