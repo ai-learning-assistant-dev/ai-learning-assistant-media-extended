@@ -1,10 +1,10 @@
 {
-  "id": "media-extended",
-  "name": "Media Extended",
-  "version": "3.2.6",
+  "id": "ai-learning-assistant-media-extended",
+  "name": "Media Extended (AI Learning Assistant)",
+  "version": "1.2.0",
   "minAppVersion": "1.5.7",
   "description": "Media(Video/Audio) Playback Enhancement for Obsidian.md",
-  "author": "AidenLx",
-  "authorUrl": "https://github.com/AidenLx/",
+  "author": "AI Learning Assistant Dev (based on AidenLx's work)",
+  "authorUrl": "https://github.com/ai-learning-assistant-dev",
   "isDesktopOnly": true
 }
